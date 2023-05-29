@@ -13,7 +13,9 @@ const userSchemma = mongoose.Schema({
         type: Number
     },
     DPI: {
-        type: Number
+        type: Number,
+        maxLength: 13,
+        minLength: 13
     },
     adress: {
         type: String
@@ -32,6 +34,9 @@ const userSchemma = mongoose.Schema({
     },
     salary: {
         type: Number
+    },
+    role: {
+        type: String
     }
 }, {
     versionKey: false
