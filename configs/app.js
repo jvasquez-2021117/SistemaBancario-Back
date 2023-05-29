@@ -8,11 +8,15 @@ const app = express()
 
 const port = process.env.PORT || 3200;
 
+const userRoutes = require('../src/user/user.routes')
+
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(cors())
 app.use(helmet())
 app.use(morgan('dev'))
+
+app.use('/user', userRoutes)
 
 exports.initServer = () => {
     app.listen(port);
