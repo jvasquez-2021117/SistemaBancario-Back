@@ -1,6 +1,7 @@
 'use strict'
 
-const Transfer = require('./transfers.model')
+const Transfer = require('./transfers.model');
+const Account = require('../account/account.model');
 
 
 exports.test = (req, res)=>{
@@ -12,6 +13,8 @@ exports.create = async(req, res)=>{
         const data = req.body;
         let transfers = new Transfer(data);
         await transfers.save();
+        await Account.findOneAndUpdate({_id: data.accountReq}, {$inc: {balances: data.amount}}, {new:  true});
+        await Account.findOneAndUpdate({_id: data.accountSender}, {$inc: {balances: -data.amount}}, {new: true});
         return res.status(200).send({message: 'Deposit made successfully'})
     }catch(e){
         console.error(e);
@@ -23,8 +26,13 @@ exports.update = async(req, res)=>{
     try{
         const { id } = req.params;
         let data = req.body;
-        let update = await Transfer.findOneAndUpdate({_id: id}, data, {new: true});
-        if(!update) return res.send({message: 'Transfer not found and not deleted'});
+        let transfer = await Transfer.findOne({_id: id});
+        let newAmount = data.amount-transfer.amount;
+        if(!transfer) return res.send({message: 'Transfer not found and not deleted'});
+        await Transfer.findOneAndUpdate({_id: id}, data, {new: true});
+        await Account.findOneAndUpdate({_id: transfer.accountReq}, {$inc: {balances: newAmount}}, {new: true});
+        await Account.findOneAndUpdate({_id: transfer.accountSender}, {$inc: {balances: -newAmount}}, {new: true});
+
         return res.status(200).send({message: 'Transfer updated successfully'});
     }catch(e){
         console.error(e);

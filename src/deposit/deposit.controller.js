@@ -1,6 +1,7 @@
 'use strict'
 
 const Deposit = require('./deposit.model')
+const Account = require('../account/account.model');
 
 exports.test = (req, res)=>{
     return res.send({message: 'test fuction is running'});
@@ -11,6 +12,7 @@ exports.create = async(req, res)=>{
         const data = req.body;
         let deposit = new Deposit(data);
         await deposit.save();
+        await Account.findOneAndUpdate({_id: data.id}, {$inc: {balances: data.amount}}, {new: true})
         return res.status(200).send({message: 'Deposit made successfully'})
     }catch(e){
         console.error(e);
@@ -22,8 +24,10 @@ exports.update = async(req, res)=>{
     try{
         const { id } = req.params;
         let data = req.body;
-        let update = await Deposit.findOneAndUpdate({_id: id}, data, {new: true});
-        if(!update) return res.send({message: 'Deposit not found and not deleted'});
+        let deposit = await Deposit.findOne({_id: id})
+        if(!deposit) return res.send({message: 'Deposit not found and not deleted'});
+        await Deposit.findOneAndUpdate({_id: id}, data, {new: true});
+        await Account.findOneAndUpdate({_id: deposit.accountReq}, {$inc: {balances: (data.amount-deposit.amount)}}, {new:  true});
         return res.status(200).send({message: 'Deposit updated successfully'});
     }catch(e){
         console.error(e);
