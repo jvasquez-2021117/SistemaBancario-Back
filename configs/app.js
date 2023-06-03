@@ -13,6 +13,8 @@ const accountRoutes = require('../src/account/account.routes');
 const despositRoutes = require('../src/deposit/desposit.routes');
 const transferRoutes = require('../src/trasnfers/transfers.routes');
 const typeAccountRoutes = require('../src/typeAccount/typeAccount.routes');
+const servicesRoutes = require('../src/ProductServices/services.router')
+const productRoutes = require('../src/product/product.router')
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
@@ -25,6 +27,8 @@ app.use('/account', accountRoutes);
 app.use('/deposit', despositRoutes);
 app.use('/transfer', transferRoutes);
 app.use('/typeAccount', typeAccountRoutes);
+app.use('/services', servicesRoutes)
+app.use('/product', productRoutes)
 
 exports.initServer = () => {
     app.listen(port);
