@@ -62,8 +62,14 @@ exports.login = async (req, res) => {
 exports.save = async (req, res) => {
     try {
         let data = req.body;
-        let userExists = await User.findOne({ DPI: data.DPI });
-        if (userExists) return res.send({ message: 'This User already exists' });
+
+        let userExistsDPI = await User.findOne({ DPI: data.DPI });
+        if (userExistsDPI) return res.send({ message: 'This DPI is already in use' });
+        let userExistsEmail = await User.findOne({ email: data.email });
+        if (userExistsEmail) return res.send({ message: 'This Email is already in use' });
+        let userExistsUsername = await User.findOne({ username: data.username })
+        if (userExistsUsername) return res.send({ message: 'This Email is already in use' })
+
         let validate = validateData(data)
         if (validate) return res.status(400).send(validate)
         data.password = await encrypt(data.password)
@@ -72,6 +78,43 @@ exports.save = async (req, res) => {
         return res.status(201).send({ message: 'User created successfully' });
     } catch (e) {
         console.log(e);
-        return res.status(500).send({ message: 'Error creating account' })
+        return res.status(500).send({ message: 'Error creating user' })
+    }
+}
+
+exports.update = async (req, res) => {
+    try {
+        let idUser = req.params.id;
+        let data = req.body;
+
+        let userExistsDPI = await User.findOne({ DPI: data.DPI });
+        if (userExistsDPI) return res.send({ message: 'This DPI is already in use' });
+        let userExistsEmail = await User.findOne({ email: data.email });
+        if (userExistsEmail) return res.send({ message: 'This Email is already in use' });
+        let userExistsUsername = await User.findOne({ username: data.username })
+        if (userExistsUsername) return res.send({ message: 'This Email is already in use' })
+
+        let updatedUser = await User.findOneAndUpdate(
+            { _id: idUser },
+            data,
+            { new: true, upsert: true }
+        )
+        if (!updatedUser) return res.send({ message: 'User not found and not update' });
+        return res.send({ message: 'Updated User', idUser })
+    } catch (e) {
+        console.log(e);
+        return res.status(500).send({ message: 'Error updating user' })
+    }
+}
+
+exports.delete = async (req, res) => {
+    try {
+        let idUser = req.params.id;
+        let userDeleted = await User.findOneAndDelete({ _id: idUser });
+        if (!userDeleted) return res.send({ message: 'User not found and not deleted' });
+        return res.send({ message: 'User deleting succesfully' })
+    } catch (e) {
+        console.log(e);
+        return res.status(404).send({ message: 'Error deleting user' })
     }
 }
