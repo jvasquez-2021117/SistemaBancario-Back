@@ -31,9 +31,9 @@ exports.update = async(req, res)=>{
     }
 }
 
-exports.getAccount = async(req, res)=>{
+exports.getAccounts = async(req, res)=>{
     try{
-        let accounts = await Account.find();
+        let accounts = await Account.find().populate('typeAccount').populate('user');
         return res.status(200).send({accounts});
     }catch(e){
         console.error(e);
@@ -44,7 +44,7 @@ exports.getAccount = async(req, res)=>{
 exports.getById = async(req, res)=>{
     try{
         const { id } = req.params;
-        let account = await Account.findOne({_id: id});
+        let account = await Account.findOne({_id: id}).populate('typeAccount').populate('user');
         return res.status(200).send({account});
     }catch(e){
         console.error(e);

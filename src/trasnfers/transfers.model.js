@@ -19,7 +19,7 @@ const transferSchema = mongoose.Schema({
     },
     date: {
         type: Date,
-        default: now()
+        default: Date.now
     },
     description: {
         type: String
@@ -29,4 +29,4 @@ const transferSchema = mongoose.Schema({
     versionKey: false
 });
 
-module.exports = mongoose.model('Transfer', depositSchema);
+module.exports = mongoose.model('Transfer', transferSchema);
