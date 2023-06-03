@@ -9,6 +9,10 @@ const app = express()
 const port = process.env.PORT || 3200;
 
 const userRoutes = require('../src/user/user.routes')
+const accountRoutes = require('../src/account/account.routes');
+const despositRoutes = require('../src/deposit/desposit.routes');
+const transferRoutes = require('../src/trasnfers/transfers.routes');
+const typeAccountRoutes = require('../src/typeAccount/typeAccount.routes');
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
@@ -16,7 +20,11 @@ app.use(cors())
 app.use(helmet())
 app.use(morgan('dev'))
 
-app.use('/user', userRoutes)
+app.use('/user', userRoutes);
+app.use('/account', accountRoutes);
+app.use('/deposit', despositRoutes);
+app.use('/transfer', transferRoutes);
+app.use('/typeAccount', typeAccountRoutes);
 
 exports.initServer = () => {
     app.listen(port);

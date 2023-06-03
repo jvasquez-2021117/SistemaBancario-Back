@@ -12,7 +12,7 @@ exports.create = async(req, res)=>{
         const data = req.body;
         let deposit = new Deposit(data);
         await deposit.save();
-        await Account.findOneAndUpdate({_id: data.id}, {$inc: {balances: data.amount}}, {new: true})
+        await Account.findOneAndUpdate({_id: data.accountReq}, {$inc: {balances: data.amount}}, {new: true})
         return res.status(200).send({message: 'Deposit made successfully'})
     }catch(e){
         console.error(e);
@@ -37,7 +37,7 @@ exports.update = async(req, res)=>{
 
 exports.getDeposits = async(req, res)=>{
     try{
-        let deposits = await Deposit.find();
+        let deposits = await Deposit.find().populate('accountReq');
         return res.status(200).send({deposits});
     }catch(e){
         console.error(e);
@@ -48,7 +48,7 @@ exports.getDeposits = async(req, res)=>{
 exports.getDepositById = async(req, res)=>{
     try{
         let { id } = req.params;
-        let deposit = await Deposit.findOne({_id: id});
+        let deposit = await Deposit.findOne({_id: id}).populate('accountReq');
         return res.status(200).send({deposit});
     }catch(e){
         console.error(e);

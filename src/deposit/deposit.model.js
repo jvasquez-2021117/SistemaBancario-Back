@@ -14,7 +14,7 @@ const depositSchema = mongoose.Schema({
     },
     date: {
         type: Date,
-        default: now()
+        default: Date.now
     }
 },
 {
