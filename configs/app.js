@@ -9,6 +9,7 @@ const app = express()
 const port = process.env.PORT || 3200;
 
 const userRoutes = require('../src/user/user.routes')
+const servicesRoutes = require('../src/ProductServices/services.router')
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
@@ -17,6 +18,7 @@ app.use(helmet())
 app.use(morgan('dev'))
 
 app.use('/user', userRoutes)
+app.use('/services', servicesRoutes)
 
 exports.initServer = () => {
     app.listen(port);
