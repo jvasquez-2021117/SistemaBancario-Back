@@ -10,5 +10,7 @@ api.post('/save', userController.save);
 api.post('/login', userController.login);
 api.put('/update/:id', userController.update);
 api.delete('/delete/:id', userController.delete);
+api.get('/get', userController.get);
+api.get('/getById', userController.getById);
 
 module.exports = api
