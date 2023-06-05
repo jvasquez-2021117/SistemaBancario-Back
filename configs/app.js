@@ -13,8 +13,8 @@ const accountRoutes = require('../src/account/account.routes');
 const despositRoutes = require('../src/deposit/desposit.routes');
 const transferRoutes = require('../src/trasnfers/transfers.routes');
 const typeAccountRoutes = require('../src/typeAccount/typeAccount.routes');
-const servicesRoutes = require('../src/ProductServices/services.router')
-const productRoutes = require('../src/product/product.router')
+const servicesRoutes = require('../src/ProductServices/services.routes')
+const productRoutes = require('../src/product/product.routes')
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
