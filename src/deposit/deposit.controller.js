@@ -13,6 +13,7 @@ exports.create = async(req, res)=>{
         let deposit = new Deposit(data);
         await deposit.save();
         await Account.findOneAndUpdate({_id: data.accountReq}, {$inc: {balances: data.amount}}, {new: true})
+
         return res.status(200).send({message: 'Deposit made successfully'})
     }catch(e){
         console.error(e);
