@@ -13,6 +13,8 @@ exports.create = async(req, res)=>{
         const data = req.body;
         let transfers = new Transfer(data);
         await transfers.save();
+        const account = await Account.findOne({_id: data.accountSender});
+        if(account.balances < data.amount) return res.send({message: 'dont have enough money'})
         await Account.findOneAndUpdate({_id: data.accountReq}, {$inc: {balances: data.amount}}, {new:  true});
         await Account.findOneAndUpdate({_id: data.accountSender}, {$inc: {balances: -data.amount}}, {new: true});
         return res.status(200).send({message: 'Transfer made successfully'})
@@ -29,6 +31,8 @@ exports.update = async(req, res)=>{
         let transfer = await Transfer.findOne({_id: id});
         let newAmount =  data.amount-transfer.amount;
         if(!transfer) return res.send({message: 'Transfer not found and not deleted'});
+        let account = await Account.findOne({_id: transfer.accountSender});
+        if(account.balances < newAmount) return res.send({message: 'dont have enough money'})
         await Transfer.findOneAndUpdate({_id: id}, data, {new: true});
         await Account.findOneAndUpdate({_id: transfer.accountReq}, {$inc: {balances: newAmount}}, {new: true});
         await Account.findOneAndUpdate({_id: transfer.accountSender}, {$inc: {balances: -newAmount}}, {new: true});

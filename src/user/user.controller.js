@@ -69,11 +69,12 @@ exports.save = async (req, res) => {
         if (userExistsEmail) return res.send({ message: 'This Email is already in use' });
         let userExistsUsername = await User.findOne({ username: data.username })
         if (userExistsUsername) return res.send({ message: 'This Email is already in use' })
+        if(data.salary<100) return res.send({message: 'The minimun salary can not be less than 100'})
 
         let validate = validateData(data)
         if (validate) return res.status(400).send(validate)
         data.password = await encrypt(data.password)
-        let user = new User(data);
+        let user = new User(data);s 
         await user.save();
         return res.status(201).send({ message: 'User created successfully' });
     } catch (e) {
