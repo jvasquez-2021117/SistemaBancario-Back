@@ -9,6 +9,6 @@ api.post('/add', typeAccountController.add);
 api.put('/update/:id', typeAccountController.update);
 api.delete('/delete/:id', typeAccountController.delete);
 api.get('/get', typeAccountController.get);
-api.get('/getById:/id', typeAccountController.getById);
+api.get('/getById/:id', typeAccountController.getById);
 
 module.exports = api;

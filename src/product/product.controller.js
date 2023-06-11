@@ -49,3 +49,24 @@ exports.delete = async (req, res) => {
         return res.status(404).send({message: 'Error deleting Product'})
     }
 }
+
+exports.get = async(req, res)=>{
+    try{
+        const products = await Product.find();
+        return res.status(200).send({products});
+    }catch(e){
+        console.error(e);
+        return res.status(500).send({message: 'Error getting'})
+    }
+}
+
+exports.getById = async(req, res)=>{
+    try{
+        const { id } = req.params;
+        const product = await Product.findOne({_id: id})
+        return res.status(200).send({product});
+    }catch(e){
+        console.error(e);
+        return res.status(500).send({message: 'Error getting'})
+    }
+}
