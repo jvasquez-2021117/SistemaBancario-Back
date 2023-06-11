@@ -11,6 +11,7 @@ api.post('/login', userController.login);
 api.put('/update/:id', userController.update);
 api.delete('/delete/:id', userController.delete);
 api.get('/get', userController.get);
-api.get('/getById', userController.getById);
+api.get('/getById/:id', userController.getById);
+api.get('/getRoleClient', userController.getRoleClient);
 
 module.exports = api

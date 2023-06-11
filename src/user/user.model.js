@@ -36,7 +36,8 @@ const userSchemma = mongoose.Schema({
         type: Number
     },
     role: {
-        type: String
+        type: String,
+        uppercase: true
     }
 }, {
     versionKey: false
