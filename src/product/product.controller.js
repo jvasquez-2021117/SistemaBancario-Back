@@ -2,7 +2,6 @@
 
 const Product = require('./product.model')
 
-
 exports.test = (req, res) => {
     return res.send({ message: 'Test product running' })
 }

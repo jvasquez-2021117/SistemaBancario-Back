@@ -38,16 +38,22 @@ exports.adminDefault = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         let data = req.body
-        if (data.email == '' || data.password == '') return res.send({ message: 'Check that all fields are complete' });
-        let msg = validateData(data.email, data.password);
+        if (data.username == '' || data.password == '') return res.send({ message: 'Check that all fields are complete' });
+        let msg = validateData(data.username, data.password);
         if (msg) return res.status(400).send({ message: msg });
-        let user = await User.findOne({ email: data.email });
+        let user = await User.findOne({ username: data.username });
         if (user && await checkPassword(data.password, user.password)) {
             let token = await createToken(user)
             let userLogged = {
                 id: user._id,
-                user: user.name,
-                surname: user.surname,
+                name: user.name,
+                username: user.username,
+                DPI: user.DPI,
+                adress: user.adress,
+                phone: user.phone,
+                email: user.email,
+                work: user.work,
+                salary: user.salary,
                 role: user.role
             }
             return res.send({ message: 'User logged succesfully', token, userLogged })
@@ -69,12 +75,13 @@ exports.save = async (req, res) => {
         if (userExistsEmail) return res.send({ message: 'This Email is already in use' });
         let userExistsUsername = await User.findOne({ username: data.username })
         if (userExistsUsername) return res.send({ message: 'This Email is already in use' })
-        if(data.salary<100) return res.send({message: 'The minimun salary can not be less than 100'})
+        if (data.salary < 100) return res.send({ message: 'The minimun salary can not be less than 100' })
 
+        data.noAccount = Math.floor(Math.random() * 900000000) + 100000000;
         let validate = validateData(data)
-        if (validate) return res.status(400).send(validate)
+        if (validate) return res.status(400).send({ message: validate })
         data.password = await encrypt(data.password)
-        let user = new User(data);s 
+        let user = new User(data);
         await user.save();
         return res.status(201).send({ message: 'User created successfully' });
     } catch (e) {
@@ -120,24 +127,35 @@ exports.delete = async (req, res) => {
     }
 }
 
-exports.get = async(req, res) => {
-    try{
+exports.get = async (req, res) => {
+    try {
         let users = await User.find();
-        return res.status(200).send({users});
-    }catch(e){
+        return res.status(200).send({ users });
+    } catch (e) {
         console.error(e);
-        return res.status(500).send({message: 'Error getting'})
+        return res.status(500).send({ message: 'Error getting' })
     }
 }
 
-exports.getById =  async(req, res)=>{
-    try{
+exports.getById = async (req, res) => {
+    try {
         let { id } = req.params;
-        let user = await User.findOne({_id: id});
-        if(!user) return res.send({message: 'User not found'});
-        return res.status(200).send({user});
-    }catch(e){
+        let user = await User.findOne({ _id: id });
+        if (!user) return res.send({ message: 'User not found' });
+        return res.status(200).send({ user });
+    } catch (e) {
         console.error(e);
-        return res.status(500).send({message: 'Error getting'})
+        return res.status(500).send({ message: 'Error getting' })
+    }
+}
+
+exports.getRoleClient = async (req, res) => {
+    try {
+        let user = await User.find({ role: 'CLIENT' });
+        if (!user) return res.send({ message: 'User not found role Client' });
+        return res.status(200).send({ user });
+    } catch (e) {
+        console.error(e);
+        return res.status(500).send({ message: 'Error getting' })
     }
 }
