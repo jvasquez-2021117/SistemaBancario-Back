@@ -11,12 +11,23 @@ exports.test = (req, res)=>{
 exports.create = async(req, res)=>{
     try{
         const data = req.body;
+        const accountReq = await Account.findOne({$and: [{_id: data.accountReq}, {dpi: data.dpi}]});
+        if(!accountReq) return res.send({message: 'Account not found'})
+        const accountSender = await Account.findOne({_id: data.accountSender});
+        if(data.amount > 2000) return res.send({message: 'Transfers can only be less than 2000'});
+        if(accountSender.balances < data.amount) return res.send({message: 'dont have enough money'});
+        let fechaActual = new Date();
+        fechaActual.setHours(0, 0, 0, 0);
+        let fechaManana = new Date(fechaActual);
+        fechaManana.setDate(fechaManana.getDate() + 1);
+        console.log(fechaManana);
+        const total = await Transfer.find({ $and: [{accountSender: data.accountSender}, {date: { $gte: fechaActual, $lt: fechaManana}}]});
+        const totalAmount = total.reduce((acumulador, elemento) => acumulador + elemento.amount, 0);
+        if(parseInt(totalAmount)+parseInt(data.amount) > 10000) return res.send({message: 'No puede transferir mas de 10000 en un dia'})
         let transfers = new Transfer(data);
         await transfers.save();
-        const account = await Account.findOne({_id: data.accountSender});
-        if(account.balances < data.amount) return res.send({message: 'dont have enough money'})
-        await Account.findOneAndUpdate({_id: data.accountReq}, {$inc: {balances: data.amount}}, {new:  true});
-        await Account.findOneAndUpdate({_id: data.accountSender}, {$inc: {balances: -data.amount}}, {new: true});
+        await Account.findOneAndUpdate({_id: data.accountReq}, {$inc: {balances: data.amount, movements: 1}}, {new:  true});
+        await Account.findOneAndUpdate({_id: data.accountSender}, {$inc: {balances: -data.amount, movements: 1}}, {new: true});
         return res.status(200).send({message: 'Transfer made successfully'})
     }catch(e){
         console.error(e);

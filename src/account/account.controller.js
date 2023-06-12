@@ -1,6 +1,7 @@
 'use strict'
 
 const Account = require('./account.model')
+const User = require('../user/user.model')
 
 exports.test = (req, res)=>{
     return res.send({message: 'test fuction is running'})
@@ -9,6 +10,9 @@ exports.test = (req, res)=>{
 exports.add = async(req, res)=>{
     try{
         const data = req.body;
+        const user = await User.findOne({_id: data.user})
+        if(!user) return res.send({message: 'User not found'});
+        data.dpi = user.DPI;
         const newAccount = new Account(data);
         await newAccount.save();
         return res.status(200).send({message: 'Account created successfully'});
@@ -62,3 +66,25 @@ exports.delete = async(req, res)=>{
         console.error(e);
     }
 }
+
+exports.movementsHight = async(req, res)=>{
+    try{
+        const accounts = await Account.find().sort({movements: -1});
+        return res.status(200).send({accounts})
+    }catch(e){
+        console.error(e);
+        return res.status(500).send({message: 'Error getting'});
+    }
+}
+
+exports.movementsUnder = async(req, res)=>{
+    try{
+        const accounts = await Account.find().sort({movements: 1});
+        console.log(accounts);
+        return res.status(200).send({accounts})
+    }catch(e){
+        console.error(e);
+        return res.status(500).send({message: 'Error getting'});
+    }
+}
+
