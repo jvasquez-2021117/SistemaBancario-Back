@@ -8,7 +8,9 @@ api.get('/test', accountController.test);
 api.post('/add', accountController.add);
 api.put('/update/:id', accountController.update);
 api.delete('/delete/:id', accountController.delete);
-api.get('/get', accountController.getAccounts)
-api.get('/getById/:id', accountController.getById)
+api.get('/get', accountController.getAccounts);
+api.get('/getById/:id', accountController.getById);
+api.get('/getMovementsHigh', accountController.movementsHight);
+api.get('/getMovementsUnder', accountController.movementsUnder);
 
 module.exports = api;

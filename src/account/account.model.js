@@ -22,6 +22,13 @@ const accountSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+    dpi:{
+        type: Number
+    },
+    movements:{
+        type: Number,
+        default: 0
     }
 
 },{
