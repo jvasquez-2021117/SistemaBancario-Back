@@ -3,6 +3,10 @@
 const mongoose = require('mongoose');
 
 const accountSchema = mongoose.Schema({
+    _id:{
+        type: Number,
+        default: Math.floor(Math.random() * (9999999999 - 1000000000 + 1)) + 1000000000
+    },
     balances: {
         type: Number,
         required: true,

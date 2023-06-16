@@ -6,6 +6,37 @@ exports.test = (req, res)=>{
     return res.send({message: 'Test fuction is running'});
 }
 
+exports.typesAccountDefault = async (req, res) => {
+    try {
+        let monetaria = {
+            name: 'MONETARIA'
+        }
+        let infantil = {
+            name: 'INFANTIL'
+        }
+        let credito = {
+            name: 'TARJETA DE CREDITO'
+        }
+        let prepago = {
+            name: 'TARJETA PREPAGO'
+        }
+        let typeAccount = await TypeAccount.findOne({ $or: [ {name: monetaria.name}, {name: infantil.name}, {name: credito.name}, {name: prepago.name} ]});
+        if (typeAccount) return
+        let mone = new TypeAccount(monetaria);
+        let infa = new TypeAccount(infantil);
+        let credi = new TypeAccount(credito);
+        let prepa = new TypeAccount(prepago);
+        await mone.save();
+        await infa.save();
+        await credi.save();
+        await prepa.save();
+        return
+    } catch (e) {
+        console.error(e);
+        return res.status(500).send({ message: 'Error create types accounts defaults' })
+    }
+}
+
 exports.add = async(req, res)=>{
     try{
         const data = req.body;
