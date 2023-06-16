@@ -2,6 +2,7 @@
 
 const Deposit = require('./deposit.model')
 const Account = require('../account/account.model');
+const HistoryDeposit = require('../historyDeposit/historyDeposit.model');
 
 exports.test = (req, res)=>{
     return res.send({message: 'test fuction is running'});
@@ -11,9 +12,10 @@ exports.create = async(req, res)=>{
     try{
         const data = req.body;
         let deposit = new Deposit(data);
-        await deposit.save();
-        await Account.findOneAndUpdate({_id: data.accountReq}, {$inc: {balances: data.amount, movements: 1}}, {new: true})
-
+        let despositSave = await deposit.save();
+        let accountR = await Account.findOneAndUpdate({_id: data.accountReq}, {$inc: {balances: data.amount, movements: 1}}, {new: true});
+        let history = new HistoryDeposit({deposit: despositSave._id, user: accountR.user});
+        await history.save();
         return res.status(200).send({message: 'Deposit made successfully'})
     }catch(e){
         console.error(e);
