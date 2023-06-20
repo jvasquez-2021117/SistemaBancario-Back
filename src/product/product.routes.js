@@ -9,6 +9,6 @@ api.post('/add', productController.add);
 api.put('/update/:id', productController.update);
 api.delete('/delete/:id', productController.delete);
 api.get('/get', productController.get);
-api.get('/gerById/:id', productController.getById);
+api.get('/getById/:id', productController.getById);
 
 module.exports = api
