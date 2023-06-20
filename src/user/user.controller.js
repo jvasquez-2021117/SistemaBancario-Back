@@ -76,8 +76,6 @@ exports.save = async (req, res) => {
         let userExistsUsername = await User.findOne({ username: data.username })
         if (userExistsUsername) return res.send({ message: 'This Email is already in use' })
         if (data.salary < 100) return res.send({ message: 'The minimun salary can not be less than 100' })
-
-        data.noAccount = Math.floor(Math.random() * 900000000) + 100000000;
         let validate = validateData(data)
         if (validate) return res.status(400).send({ message: validate })
         data.password = await encrypt(data.password)

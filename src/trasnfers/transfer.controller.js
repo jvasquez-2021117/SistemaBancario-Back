@@ -11,7 +11,7 @@ exports.test = (req, res)=>{
 exports.create = async(req, res)=>{
     try{
         const data = req.body;
-        const accountReq = await Account.findOne({$and: [{_id: data.accountReq}, {dpi: data.dpi}]});
+        const accountReq = await Account.findOne({_id: data.accountReq});
         if(!accountReq) return res.send({message: 'Account not found'})
         const accountSender = await Account.findOne({_id: data.accountSender});
         if(data.amount > 2000) return res.send({message: 'Transfers can only be less than 2000'});
