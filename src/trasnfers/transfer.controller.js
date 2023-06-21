@@ -27,10 +27,10 @@ exports.create = async (req, res) => {
         if (parseInt(totalAmount) + parseInt(data.amount) > 10000) return res.send({ message: 'No puede transferir mas de 10000 en un dia' })
         let transfers = new Transfer(data);
         let transferSave = await transfers.save();
-        let req = await Account.findOneAndUpdate({ _id: data.accountReq }, { $inc: { balances: data.amount, movements: 1 } }, { new: true });
+        let req2 = await Account.findOneAndUpdate({ _id: data.accountReq }, { $inc: { balances: data.amount, movements: 1 } }, { new: true });
         let sender = await Account.findOneAndUpdate({ _id: data.accountSender }, { $inc: { balances: -data.amount, movements: 1 } }, { new: true });
         let history = new historyTransfer({ transfer: transferSave._id, user: sender.user });
-        let history2 = new historyTransfer({ transfer: transferSave._id, user: req.user })
+        let history2 = new historyTransfer({ transfer: transferSave._id, user: req2.user })
         await history.save();
         await history2.save();
         return res.status(200).send({ message: 'Transfer made successfully' })
