@@ -14,6 +14,9 @@ exports.typesAccountDefault = async (req, res) => {
         let infantil = {
             name: 'INFANTIL'
         }
+        let ahorro = {
+            name: 'AHORRO'
+        }
         let credito = {
             name: 'TARJETA DE CREDITO'
         }
@@ -23,10 +26,12 @@ exports.typesAccountDefault = async (req, res) => {
         let typeAccount = await TypeAccount.findOne({ $or: [{ name: monetaria.name }, { name: infantil.name }, { name: credito.name }, { name: prepago.name }] });
         if (typeAccount) return
         let mone = new TypeAccount(monetaria);
+        let sav = new TypeAccount(ahorro);
         let infa = new TypeAccount(infantil);
         let credi = new TypeAccount(credito);
         let prepa = new TypeAccount(prepago);
         await mone.save();
+        await sav.save();
         await infa.save();
         await credi.save();
         await prepa.save();
