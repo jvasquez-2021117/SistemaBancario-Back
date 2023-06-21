@@ -4,9 +4,9 @@ const mongoose = require('mongoose');
 
 const depositSchema = mongoose.Schema({
     accountReq: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Number,
         ref: 'Account',
-        required: true 
+        required: true
     },
     amount: {
         type: Number,
@@ -16,8 +16,8 @@ const depositSchema = mongoose.Schema({
         type: String,
     }
 },
-{
-    versionKey: false
-});
+    {
+        versionKey: false
+    });
 
 module.exports = mongoose.model('Deposit', depositSchema);

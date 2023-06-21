@@ -2,6 +2,7 @@
 
 const Transfer = require('./transfers.model');
 const Account = require('../account/account.model');
+const historyTransfer = require('../historyTransfer/historyTransfer.model');
 
 
 exports.test = (req, res) => {
@@ -25,9 +26,13 @@ exports.create = async (req, res) => {
         const totalAmount = total.reduce((acumulador, elemento) => acumulador + elemento.amount, 0);
         if (parseInt(totalAmount) + parseInt(data.amount) > 10000) return res.send({ message: 'No puede transferir mas de 10000 en un dia' })
         let transfers = new Transfer(data);
-        await transfers.save();
-        await Account.findOneAndUpdate({ _id: data.accountReq }, { $inc: { balances: data.amount, movements: 1 } }, { new: true });
-        await Account.findOneAndUpdate({ _id: data.accountSender }, { $inc: { balances: -data.amount, movements: 1 } }, { new: true });
+        let transferSave = await transfers.save();
+        let req = await Account.findOneAndUpdate({ _id: data.accountReq }, { $inc: { balances: data.amount, movements: 1 } }, { new: true });
+        let sender = await Account.findOneAndUpdate({ _id: data.accountSender }, { $inc: { balances: -data.amount, movements: 1 } }, { new: true });
+        let history = new historyTransfer({ transfer: transferSave._id, user: sender.user });
+        let history2 = new historyTransfer({ transfer: transferSave._id, user: req.user })
+        await history.save();
+        await history2.save();
         return res.status(200).send({ message: 'Transfer made successfully' })
     } catch (e) {
         console.error(e);
