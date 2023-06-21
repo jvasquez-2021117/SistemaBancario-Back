@@ -6,12 +6,12 @@ const transferSchema = mongoose.Schema({
     accountReq: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Account',
-        required: true 
+        required: true
     },
     accountSender: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Account',
-        required: true 
+        required: true
     },
     amount: {
         type: Number,
@@ -25,8 +25,8 @@ const transferSchema = mongoose.Schema({
         type: String
     }
 },
-{
-    versionKey: false
-});
+    {
+        versionKey: false
+    });
 
 module.exports = mongoose.model('Transfer', transferSchema);

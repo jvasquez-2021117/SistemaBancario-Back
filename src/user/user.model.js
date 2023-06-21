@@ -8,7 +8,7 @@ const userSchemma = mongoose.Schema({
     },
     username: {
         type: String
-    },    
+    },
     DPI: {
         type: Number,
         maxLength: 13,
