@@ -2,7 +2,7 @@
 
 const transferController = require('./transfer.controller');
 const express = require('express');
-const api  = express.Router();
+const api = express.Router();
 
 api.get('/test', transferController.test);
 api.post('/add', transferController.create);
