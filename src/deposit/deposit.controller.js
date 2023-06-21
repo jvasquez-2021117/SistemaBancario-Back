@@ -40,7 +40,7 @@ exports.update = async (req, res) => {
 
 exports.getDeposits = async (req, res) => {
     try {
-        let deposits = await Deposit.find().populate('accountReq');
+        let deposits = await Deposit.find().populate({ path: 'accountReq', populate: 'user' });
         return res.status(200).send({ deposits });
     } catch (e) {
         console.error(e);

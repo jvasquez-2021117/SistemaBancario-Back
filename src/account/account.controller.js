@@ -13,8 +13,6 @@ exports.add = async (req, res) => {
         const user = await User.findOne({ _id: data.user })
         if (!user) return res.send({ message: 'User not found' });
         data.dpi = user.DPI;
-        const randomNumber = Math.floor(Math.random() * (9999999999 - 1000000000 + 1)) + 1000000000;
-        const accountId = randomNumber.toString();
         const newAccount = new Account(data);
         await newAccount.save();
         return res.status(200).send({ message: 'Account created successfully' });
