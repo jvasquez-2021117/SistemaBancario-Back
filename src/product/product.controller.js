@@ -42,30 +42,30 @@ exports.delete = async (req, res) => {
         let idProduct = req.params.id
         let productDeleted = await Product.findOneAndDelete({ _id: idProduct });
         if (!productDeleted) return res.send({ message: 'Product not found and not deleted' });
-        return res.send({message: 'Product deleting succesfully'})
+        return res.send({ message: 'Product deleting succesfully' })
     } catch (e) {
         console.log(e);
-        return res.status(404).send({message: 'Error deleting Product'})
+        return res.status(404).send({ message: 'Error deleting Product' })
     }
 }
 
-exports.get = async(req, res)=>{
-    try{
+exports.get = async (req, res) => {
+    try {
         const products = await Product.find();
-        return res.status(200).send({products});
-    }catch(e){
+        return res.status(200).send({ products });
+    } catch (e) {
         console.error(e);
-        return res.status(500).send({message: 'Error getting'})
+        return res.status(500).send({ message: 'Error getting' })
     }
 }
 
-exports.getById = async(req, res)=>{
-    try{
+exports.getById = async (req, res) => {
+    try {
         const { id } = req.params;
-        const product = await Product.findOne({_id: id})
-        return res.status(200).send({product});
-    }catch(e){
+        const product = await Product.findOne({ _id: id })
+        return res.status(200).send({ product });
+    } catch (e) {
         console.error(e);
-        return res.status(500).send({message: 'Error getting'})
+        return res.status(500).send({ message: 'Error getting' })
     }
 }

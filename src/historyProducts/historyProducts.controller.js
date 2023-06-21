@@ -2,24 +2,24 @@
 
 const HistoryProducts = require('./historyProducts.model');
 
-exports.get = async(req, res)=>{
-    try{
+exports.get = async (req, res) => {
+    try {
         const { id } = req.params;
-        const history = await HistoryDeposit.find({_id: id});
-        return res.status(200).send({history})
-    }catch(e){
+        const history = await HistoryDeposit.find({ _id: id });
+        return res.status(200).send({ history })
+    } catch (e) {
         console.error(e);
-        return res.status(500).send({message: 'Error getting'})
+        return res.status(500).send({ message: 'Error getting' })
     }
 }
 
-exports.getById = async(req, res)=>{
-    try{
+exports.getById = async (req, res) => {
+    try {
         const { id } = req.params
-        const history = await HistoryProducts.findOne({_id: id});
-        return res.status(200).send({history})
-    }catch(e){
+        const history = await HistoryProducts.findOne({ _id: id });
+        return res.status(200).send({ history })
+    } catch (e) {
         console.error(e);
-        return res.status(500).send({message: 'Error getting'})
+        return res.status(500).send({ message: 'Error getting' })
     }
 }
