@@ -43,30 +43,30 @@ exports.delete = async (req, res) => {
         let idService = req.params.id
         let serviceDeleted = await Services.findOneAndDelete({ _id: idService });
         if (!serviceDeleted) return res.send({ message: 'Service not found and not deleted' });
-        return res.send({message: 'Service deleting succesfully'})
+        return res.send({ message: 'Service deleting succesfully' })
     } catch (e) {
         console.log(e);
-        return res.status(404).send({message: 'Error deleting Service'})
+        return res.status(404).send({ message: 'Error deleting Service' })
     }
 }
 
-exports.get = async(req, res)=>{
-    try{
+exports.get = async (req, res) => {
+    try {
         const services = await Services.find();
-        return res.status(200).send({services});
-    }catch(e){
+        return res.status(200).send({ services });
+    } catch (e) {
         console.error(e);
-        return res.status(500).send({message: 'Error getting'})
+        return res.status(500).send({ message: 'Error getting' })
     }
 }
 
-exports.getById = async(req, res)=>{
-    try{
+exports.getById = async (req, res) => {
+    try {
         const { id } = req.params;
-        const service = await Services.findOne({_id: id})
-        return res.status(200).send({service});
-    }catch(e){
+        const service = await Services.findOne({ _id: id })
+        return res.status(200).send({ service });
+    } catch (e) {
         console.error(e);
-        return res.status(500).send({message: 'Error getting'})
+        return res.status(500).send({ message: 'Error getting' })
     }
 }

@@ -3,6 +3,7 @@
 const Deposit = require('./deposit.model')
 const Account = require('../account/account.model');
 const HistoryDeposit = require('../historyDeposit/historyDeposit.model');
+const moment = require('moment');
 
 exports.test = (req, res) => {
     return res.send({ message: 'test fuction is running' });
@@ -11,6 +12,9 @@ exports.test = (req, res) => {
 exports.create = async (req, res) => {
     try {
         const data = req.body;
+        let existsAccount = await Account.findOne({ _id: data.accountReq })
+        if(!existsAccount) return res.send({message: 'Account not found'})
+        data.date = moment().format('LLL');
         let deposit = new Deposit(data);
         let despositSave = await deposit.save();
         let accountR = await Account.findOneAndUpdate({ _id: data.accountReq }, { $inc: { balances: data.amount, movements: 1 } }, { new: true });
