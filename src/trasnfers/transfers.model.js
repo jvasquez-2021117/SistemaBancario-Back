@@ -4,12 +4,12 @@ const mongoose = require('mongoose');
 
 const transferSchema = mongoose.Schema({
     accountReq: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Number,
         ref: 'Account',
         required: true
     },
     accountSender: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Number,
         ref: 'Account',
         required: true
     },
@@ -18,8 +18,10 @@ const transferSchema = mongoose.Schema({
         required: true
     },
     date: {
-        type: Date,
-        default: Date.now
+        type: String,
+    },
+    hour: {
+        type: String
     },
     description: {
         type: String

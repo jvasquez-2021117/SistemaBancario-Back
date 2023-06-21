@@ -3,7 +3,7 @@
 const Transfer = require('./transfers.model');
 const Account = require('../account/account.model');
 const historyTransfer = require('../historyTransfer/historyTransfer.model');
-
+const moment = require('moment')
 
 exports.test = (req, res) => {
     return res.send({ message: 'test fuction is running' });
@@ -17,15 +17,15 @@ exports.create = async (req, res) => {
         const accountSender = await Account.findOne({ _id: data.accountSender });
         if (data.amount > 2000) return res.send({ message: 'Transfers can only be less than 2000' });
         if (accountSender.balances < data.amount) return res.send({ message: 'dont have enough money' });
-        let fechaActual = new Date();
-        fechaActual.setHours(0, 0, 0, 0);
-        let fechaManana = new Date(fechaActual);
-        fechaManana.setDate(fechaManana.getDate() + 1);
-        console.log(fechaManana);
-        const total = await Transfer.find({ $and: [{ accountSender: data.accountSender }, { date: { $gte: fechaActual, $lt: fechaManana } }] });
+
+        data.date = moment().subtract(10, 'days').calendar();
+        data.hour = moment().format('LTS');
+
+        const total = await Transfer.find({ $and: [{ accountSender: data.accountSender }, { date: data.date }] });
         const totalAmount = total.reduce((acumulador, elemento) => acumulador + elemento.amount, 0);
         if (parseInt(totalAmount) + parseInt(data.amount) > 10000) return res.send({ message: 'No puede transferir mas de 10000 en un dia' })
         let transfers = new Transfer(data);
+        console.log(total);
         let transferSave = await transfers.save();
         let req2 = await Account.findOneAndUpdate({ _id: data.accountReq }, { $inc: { balances: data.amount, movements: 1 } }, { new: true });
         let sender = await Account.findOneAndUpdate({ _id: data.accountSender }, { $inc: { balances: -data.amount, movements: 1 } }, { new: true });
@@ -62,7 +62,7 @@ exports.update = async (req, res) => {
 
 exports.getTransfers = async (req, res) => {
     try {
-        let transfers = await Transfer.find().populate('accountReq').populate('accountSender');
+        let transfers = await Transfer.find().populate({ path: 'accountReq', populate: 'user' }).populate({ path: 'accountSender', populate: 'user' });
         return res.status(200).send({ transfers });
     } catch (e) {
         console.error(e);
