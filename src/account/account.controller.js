@@ -2,6 +2,7 @@
 
 const Account = require('./account.model')
 const User = require('../user/user.model')
+const { findOneAndUpdate } = require('./account.model')
 
 exports.test = (req, res) => {
     return res.send({ message: 'test fuction is running' })
@@ -40,7 +41,7 @@ exports.update = async (req, res) => {
 
 exports.getAccounts = async (req, res) => {
     try {
-        let accounts = await Account.find().populate('typeAccount').populate('user');
+        let accounts = await Account.find().populate('typeAccount').populate('user').populate('favorite');
         return res.status(200).send({ accounts });
     } catch (e) {
         console.error(e);
@@ -89,4 +90,3 @@ exports.movementsUnder = async (req, res) => {
         return res.status(500).send({ message: 'Error getting' });
     }
 }
-

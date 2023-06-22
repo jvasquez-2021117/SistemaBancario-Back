@@ -18,7 +18,8 @@ const productRoutes = require('../src/product/product.routes');
 const historyServices = require('../src/shoppingHistoryServices/shoppingHistoryServices.routes');
 const historyProducts = require('../src/historyProducts/historyProducts.routes');
 const historyTransfer = require('../src/historyTransfer/historyTransfer.routes');
-const historyDeposit = require('../src/historyDeposit/historyDeposit.routes')
+const historyDeposit = require('../src/historyDeposit/historyDeposit.routes');
+const favoites = require('../src/favorite/favorite.routes');
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
@@ -37,6 +38,7 @@ app.use('/historyServices', historyServices);
 app.use('/historyProducts', historyProducts);
 app.use('/historyTransfer', historyTransfer);
 app.use('/historyDeposit', historyDeposit);
+app.use('/favorite', favoites);
 
 exports.initServer = () => {
     app.listen(port);
