@@ -13,7 +13,10 @@ const depositSchema = mongoose.Schema({
         required: true
     },
     date: {
-        type: String,
+        type: String
+    },
+    hour: {
+        type: String
     }
 },
     {

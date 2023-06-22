@@ -83,7 +83,6 @@ exports.movementsHight = async (req, res) => {
 exports.movementsUnder = async (req, res) => {
     try {
         const accounts = await Account.find().sort({ movements: 1 });
-        console.log(accounts);
         return res.status(200).send({ accounts })
     } catch (e) {
         console.error(e);
