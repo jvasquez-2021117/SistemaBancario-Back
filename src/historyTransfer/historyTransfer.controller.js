@@ -6,7 +6,7 @@ const HistoryDeposit = require('../historyDeposit/historyDeposit.model');
 exports.get = async (req, res) => {
     try {
         const { id } = req.params;
-        const history = await HistoryTransfer.find({ user: id });
+        const history = await HistoryTransfer.find({ user: id }).populate('transfer').populate('user');
         return res.status(200).send({ history })
     } catch (e) {
         console.error(e);
