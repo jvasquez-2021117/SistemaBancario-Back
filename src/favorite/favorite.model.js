@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 
 const favoriteSchema = mongoose.Schema({
     owner: {
-        type: Number,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
     accountFav: {
         type: Number,
