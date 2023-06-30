@@ -10,6 +10,12 @@ const favoriteSchema = mongoose.Schema({
     accountFav: {
         type: Number,
         ref: 'Account'
+    },
+    nickName: {
+        type: String
+    },
+    dpi: {
+        type: Number
     }
 }, {
     versionKey: false

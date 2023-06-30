@@ -1,11 +1,15 @@
 'use strict'
 
-const Favorite = require('./favorite.model')
+const Favorite = require('./favorite.model');
+const Account = require('../account/account.model');
 
 exports.add = async(req, res)=>{
     try{
         const data = req.body;
         const alreadyFavorite = await Favorite.findOne({ $and: [ { owner: data.owner }, { accountFav: data.accountFav } ] });
+        const account = await Account.findOne({_id: data.accountFav});
+        if(!account) return res.send({message: 'Account not found'});
+        data.dpi = account.dpi;
         if( alreadyFavorite )  return res.send({message: 'Ya agregado a favorito'});
         const newFavorite = new Favorite(data);
         await newFavorite.save();
