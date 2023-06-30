@@ -69,3 +69,17 @@ exports.getById = async (req, res) => {
         return res.status(500).send({ message: 'Error getting' })
     }
 }
+
+exports.buyProduct = async (req, res) => {
+    try {
+        let data = req.body;
+        let productExists = await Product.findOne({ name: data.name });
+        if (!productExists) return res.send({message: 'Product not found'});
+        
+
+
+    } catch (e) {
+        console.log(e);
+        return res.status(500).send({ message: 'Error buy product' })
+    }
+}
