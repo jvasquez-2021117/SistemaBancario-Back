@@ -41,7 +41,7 @@ exports.update = async (req, res) => {
 
 exports.getAccounts = async (req, res) => {
     try {
-        let accounts = await Account.find().populate('typeAccount').populate('user').populate('favorite');
+        let accounts = await Account.find().populate('typeAccount').populate('user');
         return res.status(200).send({ accounts });
     } catch (e) {
         console.error(e);
