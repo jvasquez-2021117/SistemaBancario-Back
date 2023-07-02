@@ -7,6 +7,11 @@ const Product = require('../product/product.model')
 exports.buyProduct = async (req, res) => {
     try {
         let data = req.body
+        if ((parseInt(data.account) % 10) > 0) {
+            let numberAccount = data.account
+            data.account = (numberAccount + '' + '.0')
+            console.log(data.account);
+        }
         if (!data.quantity) data.quantity = 1
         let product = await Product.findOne({ _id: data.product });
         let account = await Account.findOne({ _id: data.account });
@@ -25,4 +30,3 @@ exports.buyProduct = async (req, res) => {
         return res.status(500).send({ message: 'Error buying' })
     }
 }
-

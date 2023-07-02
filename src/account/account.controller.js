@@ -52,7 +52,7 @@ exports.getAccounts = async (req, res) => {
 exports.getByUser = async (req, res) => {
     try{
         let { id } = req.params;
-        let accounts  = await Account.find({ user: id });
+        let accounts  = await Account.find({ user: id }).populate('typeAccount').populate('user');
         return res.status(200).send({accounts})
     }catch(e){
         console.error(e);
