@@ -49,6 +49,17 @@ exports.getAccounts = async (req, res) => {
     }
 }
 
+exports.getByUser = async (req, res) => {
+    try{
+        let { id } = req.params;
+        let accounts  = await Account.find({ user: id });
+        return res.status(200).send({accounts})
+    }catch(e){
+        console.error(e);
+        return res.status(500).send({message: 'Error getting'})
+    }
+}
+
 exports.getById = async (req, res) => {
     try {
         const { id } = req.params;

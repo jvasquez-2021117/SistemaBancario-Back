@@ -12,5 +12,6 @@ api.get('/get', accountController.getAccounts);
 api.get('/getById/:id', accountController.getById);
 api.get('/getMovementsHigh', accountController.movementsHight);
 api.get('/getMovementsUnder', accountController.movementsUnder);
+api.get('/getByUser/:id', accountController.getByUser);
 
 module.exports = api;
