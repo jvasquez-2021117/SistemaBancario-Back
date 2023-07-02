@@ -38,9 +38,7 @@ exports.adminDefault = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         let data = req.body
-        if (data.username == '' || data.password == '') return res.send({ message: 'Check that all fields are complete' });
-        let msg = validateData(data.username, data.password);
-        if (msg) return res.status(400).send({ message: msg });
+        if (!data.username || !data.password) return res.send({ message: 'Check that all fields are complete' });
         let user = await User.findOne({ username: data.username });
         if (user && await checkPassword(data.password, user.password)) {
             let token = await createToken(user)
