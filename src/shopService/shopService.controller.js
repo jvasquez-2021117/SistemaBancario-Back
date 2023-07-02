@@ -7,6 +7,11 @@ const Service = require('../ProductServices/services.model')
 exports.buyService = async (req, res) => {
     try {
         let data = req.body
+        if((parseInt(data.account) % 10) > 0) {
+            let numberAccount = data.account
+            data.account = (numberAccount + '' + '.0')
+            console.log(data.account);
+        }
         let services = await Service.findOne({ _id: data.service });
         let account = await Account.findOne({ _id: data.account });
         let amount = services.price
