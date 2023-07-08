@@ -22,8 +22,8 @@ exports.add = async (req, res) => {
 
 exports.delete = async (req, res) => {
     try {
-        const data = req.body;
-        const deleteFavorite = await Favorite.findOneAndDelete({ $and: [{ owner: data.owner }, { accountFav: data.accountFav }] });
+        const { id } = req.params;
+        const deleteFavorite = await Favorite.findOneAndDelete({_id: id })
         if (!deleteFavorite) return res.send({ message: 'Favorite not found and not deleted' })
         return res.status(200).send({ message: 'Removed from favorites' });
     } catch (e) {
