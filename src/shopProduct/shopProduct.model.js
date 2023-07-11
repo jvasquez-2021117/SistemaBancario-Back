@@ -12,7 +12,7 @@ const shopProductSchemma = mongoose.Schema({
         default: 1
     },
     account: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Number,
         ref: 'Account'
     }
 }, {

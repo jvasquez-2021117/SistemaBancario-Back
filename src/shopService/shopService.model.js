@@ -8,7 +8,7 @@ const shopServiceSchemma = mongoose.Schema({
         ref: 'Service'
     },
     account: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Number,
         ref: 'Account'
     }
 }, {

@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const historyProductsModel = mongoose.Schema({
     product: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product'
+        ref: 'ShopProduct'
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
