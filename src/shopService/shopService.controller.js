@@ -3,6 +3,7 @@
 const Shop = require('./shopService.model')
 const Account = require('../account/account.model')
 const Service = require('../ProductServices/services.model')
+const HistoryService = require('../shoppingHistoryServices/shoppingHistoryServices.model');
 
 exports.buyService = async (req, res) => {
     try {
@@ -23,6 +24,8 @@ exports.buyService = async (req, res) => {
             { $inc: { balances: -(amount) } },
             { new: true }
         )
+        let history = new HistoryService({ service: shop._id, user: account.user });
+        await history.save();
         return res.status(200).send({ message: 'Shp' })
     } catch (e) {
         console.log(e);

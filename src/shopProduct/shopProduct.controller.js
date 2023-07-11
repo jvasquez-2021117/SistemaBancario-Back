@@ -3,6 +3,7 @@
 const Shop = require('./shopProduct.model')
 const Account = require('../account/account.model')
 const Product = require('../product/product.model')
+const HistoryProduct = require('../historyProducts/historyProducts.model')
 
 exports.buyProduct = async (req, res) => {
     try {
@@ -24,6 +25,8 @@ exports.buyProduct = async (req, res) => {
             { $inc: { balances: -(amount) } },
             { new: true }
         )
+        let history = new HistoryProduct({ product: shop._id, user: account.user });
+        await history.save();
         return res.status(200).send({ message: 'Shp' })
     } catch (e) {
         console.log(e);

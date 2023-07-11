@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const shoppingHistoryServicesModel = mongoose.Schema({
     service: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Service'
+        ref: 'ShopService'
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,

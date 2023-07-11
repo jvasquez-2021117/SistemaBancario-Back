@@ -5,7 +5,7 @@ const ShoppingHistoryServices = require('./shoppingHistoryServices.model');
 exports.get = async (req, res) => {
     try {
         const { id } = req.params;
-        const history = await ShoppingHistoryServices.find({ _id: id });
+        const history = await ShoppingHistoryServices.find({ user: id }).populate({ path: 'service', populate: 'service' });;
         return res.status(200).send({ history })
     } catch (e) {
         console.error(e);

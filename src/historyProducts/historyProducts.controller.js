@@ -5,7 +5,7 @@ const HistoryProducts = require('./historyProducts.model');
 exports.get = async (req, res) => {
     try {
         const { id } = req.params;
-        const history = await HistoryDeposit.find({ _id: id });
+        const history = await HistoryProducts.find({ user: id }).populate({ path: 'product', populate: 'product' });
         return res.status(200).send({ history })
     } catch (e) {
         console.error(e);
