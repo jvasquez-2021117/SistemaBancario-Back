@@ -2,10 +2,32 @@
 
 const Account = require('./account.model')
 const User = require('../user/user.model')
-const { findOneAndUpdate } = require('./account.model')
+const TypeAccount = require('../typeAccount/typeAccount.model')
 
 exports.test = (req, res) => {
     return res.send({ message: 'test fuction is running' })
+}
+
+exports.accountDefault = async (req, res) => {
+    try {
+        let existsTypeAccount = await TypeAccount.findOne({ name: 'DEFAULT' });
+        let userDefault = await User.findOne({ name: 'Default' });
+        let defAccount = {
+            _id: 1234567891.0,
+            balances: 0,
+            typeAccount: existsTypeAccount._id,
+            user: userDefault._id,
+            dpi: userDefault.DPI
+        }
+        let existsAccount = await Account.findOne({ _id: defAccount._id });
+        if (existsAccount) return
+        let accountDefault = new Account(defAccount);
+        await accountDefault.save();
+        return
+    } catch (e) {
+        console.error(e);
+        return res.status(500).send({ message: 'error creating' });
+    }
 }
 
 exports.add = async (req, res) => {
@@ -50,13 +72,13 @@ exports.getAccounts = async (req, res) => {
 }
 
 exports.getByUser = async (req, res) => {
-    try{
+    try {
         let { id } = req.params;
-        let accounts  = await Account.find({ user: id }).populate('typeAccount').populate('user');
-        return res.status(200).send({accounts})
-    }catch(e){
+        let accounts = await Account.find({ user: id }).populate('typeAccount').populate('user');
+        return res.status(200).send({ accounts })
+    } catch (e) {
         console.error(e);
-        return res.status(500).send({message: 'Error getting'})
+        return res.status(500).send({ message: 'Error getting' })
     }
 }
 

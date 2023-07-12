@@ -1,6 +1,8 @@
 'use strict'
 
 const User = require('./user.model')
+const Account = require('../account/account.model')
+const Deposit = require('../deposit/deposit.model')
 const { checkPassword, encrypt, validateData } = require('../utils/validate')
 const { createToken } = require('../services/jwt')
 
@@ -8,26 +10,42 @@ exports.test = (req, res) => {
     return res.send({ message: 'Test User running' })
 }
 
-exports.adminDefault = async (req, res) => {
+exports.defaults = async (req, res) => {
     try {
         let admin = {
             name: 'ADMINB',
             username: 'ADMINB',
-            noAccount: '123456789',
-            DPI: '1489652398741',
+            noAccount: 'ADMINB',
+            DPI: 'ADMINB',
             adress: 'ADMINB',
-            phone: '12345678',
-            email: 'ADMINB@gmail.com',
+            phone: 'ADMINB',
+            email: 'ADMINB',
             password: 'ADMINB',
             work: 'ADMINB',
             salary: '0.00',
             role: 'ADMIN'
         }
-        admin.password = await encrypt(admin.password);
+        let defUser = {
+            name: 'Default',
+            username: 'Default',
+            noAccount: 'Default',
+            DPI: 'Default',
+            adress: 'Default',
+            phone: 'Default',
+            email: 'Default@gmail.com',
+            password: 'Default',
+            work: 'Default',
+            salary: '0.00',
+            role: 'Default'
+        }
+        admin.password = await encrypt(admin.password,);
+        defUser.password = await encrypt(defUser.password);
         let existAdmin = await User.findOne({ username: admin.username });
-        if (existAdmin) return
+        let existDefault = await User.findOne({ username: defUser.username });
+        if (existAdmin || existDefault) return
         let adminDefault = new User(admin)
-        await adminDefault.save();
+        let userDefault = new User(defUser)
+        await Promise.all([adminDefault.save(), userDefault.save()])
         return
     } catch (e) {
         console.error(e);
@@ -114,6 +132,16 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
     try {
         let idUser = req.params.id;
+        let defUser = await User.findOne({ name: 'Default' })
+        let accountUser = await Account.findOne({ user: idUser })
+        let depo = await Deposit.findOne({ accountReq: accountUser._id })
+        if (defUser._id == idUser) return res.send({ message: 'Default user cannot deleted' });
+
+        await Account.updateMany(
+            { user: idUser },
+            { user: defUser._id, dpi: defUser.DPI, state: 'Desactivada' }
+        );
+
         let userDeleted = await User.findOneAndDelete({ _id: idUser });
         if (!userDeleted) return res.send({ message: 'User not found and not deleted' });
         return res.send({ message: 'User deleting succesfully' })
