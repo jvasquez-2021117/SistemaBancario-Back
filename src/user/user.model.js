@@ -10,9 +10,8 @@ const userSchemma = mongoose.Schema({
         type: String
     },
     DPI: {
-        type: Number,
-        maxLength: 13,
-        minLength: 13
+        type: String,
+        maxLength: 13
     },
     adress: {
         type: String

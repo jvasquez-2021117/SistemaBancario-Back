@@ -23,18 +23,18 @@ exports.typesAccountDefault = async (req, res) => {
         let prepago = {
             name: 'TARJETA PREPAGO'
         }
-        let typeAccount = await TypeAccount.findOne({ $or: [{ name: monetaria.name }, { name: infantil.name }, { name: credito.name }, { name: prepago.name }] });
+        let accountdef = {
+            name: 'DEFAULT'
+        }
+        let typeAccount = await TypeAccount.findOne({ $or: [{ name: monetaria.name }, { name: infantil.name }, { name: credito.name }, { name: prepago.name }, { name: accountdef.name }] });
         if (typeAccount) return
         let mone = new TypeAccount(monetaria);
         let sav = new TypeAccount(ahorro);
         let infa = new TypeAccount(infantil);
         let credi = new TypeAccount(credito);
         let prepa = new TypeAccount(prepago);
-        await mone.save();
-        await sav.save();
-        await infa.save();
-        await credi.save();
-        await prepa.save();
+        let def = new TypeAccount(accountdef);
+        await Promise.all([mone.save(), sav.save(), infa.save(), credi.save(), prepa.save(), def.save()])
         return
     } catch (e) {
         console.error(e);

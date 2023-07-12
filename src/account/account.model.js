@@ -27,7 +27,7 @@ const accountSchema = mongoose.Schema({
         required: true
     },
     dpi: {
-        type: Number
+        type: String
     },
     movements: {
         type: Number,
