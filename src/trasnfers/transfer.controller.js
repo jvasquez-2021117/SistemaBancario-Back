@@ -14,6 +14,7 @@ exports.create = async (req, res) => {
         const data = req.body;
         const accountReq = await Account.findOne({ $and: [{ _id: data.accountReq }, { dpi: data.dpi }] });
         if (!accountReq) return res.send({ message: 'Account not found' })
+        if(accountReq.state == 'Desactivada') return res.send({ message: 'This account is disable' });
         const accountSender = await Account.findOne({ _id: data.accountSender });
         if (data.amount > 2000) return res.send({ message: 'Transfers can only be less than 2000' });
         if (accountSender.balances < data.amount) return res.send({ message: 'dont have enough money' });
