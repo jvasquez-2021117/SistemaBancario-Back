@@ -14,6 +14,7 @@ exports.create = async (req, res) => {
         const data = req.body;
         let existsAccount = await Account.findOne({ _id: data.accountReq })
         if (!existsAccount) return res.send({ message: 'Account not found' })
+        if(existsAccount.state == 'Desactivada') return res.send({ message: 'This account is disable' });
         data.date = moment().subtract(10, 'days').calendar();
         data.hour = moment().format('LTS');
         let deposit = new Deposit(data);
