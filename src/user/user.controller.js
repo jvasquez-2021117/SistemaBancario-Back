@@ -134,14 +134,11 @@ exports.delete = async (req, res) => {
         let idUser = req.params.id;
         let defUser = await User.findOne({ name: 'Default' })
         let accountUser = await Account.findOne({ user: idUser })
-        let depo = await Deposit.findOne({ accountReq: accountUser._id })
         if (defUser._id == idUser) return res.send({ message: 'Default user cannot deleted' });
-
         await Account.updateMany(
             { user: idUser },
             { user: defUser._id, dpi: defUser.DPI, state: 'Desactivada' }
         );
-
         let userDeleted = await User.findOneAndDelete({ _id: idUser });
         if (!userDeleted) return res.send({ message: 'User not found and not deleted' });
         return res.send({ message: 'User deleting succesfully' })
