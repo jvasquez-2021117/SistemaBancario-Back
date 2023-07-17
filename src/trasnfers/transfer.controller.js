@@ -14,8 +14,9 @@ exports.create = async (req, res) => {
         const data = req.body;
         const accountReq = await Account.findOne({ $and: [{ _id: data.accountReq }, { dpi: data.dpi }] });
         if (!accountReq) return res.send({ message: 'Account not found' })
-        if(accountReq.state == 'Desactivada') return res.send({ message: 'This account is disable' });
+        if (accountReq.state == 'Desactivada') return res.send({ message: 'This account is disable' });
         const accountSender = await Account.findOne({ _id: data.accountSender });
+        if (!accountSender) return res.send({ message: 'Selecciona una cuenta' })
         if (data.amount > 2000) return res.send({ message: 'Transfers can only be less than 2000' });
         if (accountSender.balances < data.amount) return res.send({ message: 'dont have enough money' });
 
@@ -30,6 +31,7 @@ exports.create = async (req, res) => {
         let transferSave = await transfers.save();
         let req2 = await Account.findOneAndUpdate({ _id: data.accountReq }, { $inc: { balances: data.amount, movements: 1 } }, { new: true });
         let sender = await Account.findOneAndUpdate({ _id: data.accountSender }, { $inc: { balances: -data.amount, movements: 1 } }, { new: true });
+
         let history = new historyTransfer({ transfer: transferSave._id, user: sender.user });
         let history2 = new historyTransfer({ transfer: transferSave._id, user: req2.user })
         await history.save();
