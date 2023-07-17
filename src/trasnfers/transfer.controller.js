@@ -15,11 +15,12 @@ exports.create = async (req, res) => {
         const accountReq = await Account.findOne({ $and: [{ _id: data.accountReq }, { dpi: data.dpi }] });
         if (!accountReq) return res.send({ message: 'Account not found' })
         if (accountReq.state == 'Desactivada') return res.send({ message: 'This account is disable' });
-        const accountSender = await Account.findOne({ _id: data.accountSender });
-        if (!accountSender) return res.send({ message: 'Selecciona una cuenta' })
+        const acountSender = await Account.findOne({ _id: data.accountSender });
+        if (!acountSender) return res.send({ message: 'Selecciona una cuenta' })
         if (data.amount > 2000) return res.send({ message: 'Transfers can only be less than 2000' });
-        if (accountSender.balances < data.amount) return res.send({ message: 'dont have enough money' });
-
+        if (acountSender.balances < data.amount) return res.send({ message: 'dont have enough money' });
+        if (data.accountReq === data.accountSender) return res.send({ message: 'Cannot transfer to your own account' });
+    
         data.date = moment().subtract(10, 'days').calendar();
         data.hour = moment().format('LTS');
 
