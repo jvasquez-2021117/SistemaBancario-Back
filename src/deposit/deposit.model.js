@@ -17,6 +17,10 @@
         },
         hour: {
             type: String
+        },
+        reverse: {
+            type: Number,
+            default: 30
         }
     },
         {

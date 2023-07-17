@@ -9,6 +9,26 @@ exports.test = (req, res) => {
     return res.send({ message: 'test fuction is running' });
 }
 
+const reverse = (id) => {
+    
+    let seconds = 60;  
+    const updateReverse = async() => {
+        seconds--
+        if(seconds<= 0){
+            clearInterval(intervalo)
+            const deposit = await Deposit.findOneAndUpdate({_id: id}, {reverse: 0}, {new: true});
+            if(!deposit) return
+        }
+    }
+
+    let intervalo = setInterval(updateReverse, 1000);
+
+    setTimeout(function(){
+        clearInterval(intervalo)
+    }, 62000);
+
+}
+
 exports.create = async (req, res) => {
     try {
         const data = req.body;
@@ -22,10 +42,25 @@ exports.create = async (req, res) => {
         let accountR = await Account.findOneAndUpdate({ _id: data.accountReq }, { $inc: { balances: data.amount, movements: 1 } }, { new: true });
         let history = new HistoryDeposit({ deposit: despositSave._id, user: accountR.user });
         await history.save();
+        reverse(despositSave._id);
         return res.status(200).send({ message: 'Deposit made successfully' })
     } catch (e) {
         console.error(e);
         return res.status(500).send({ message: 'Error creating' })
+    }
+}
+
+exports.delete = async(req, res) => {
+    try{
+        let { id } = req.params;
+        let deposit = await Deposit.findOne({_id: id});
+        if(deposit.reverse <= 0) return res.send({message: 'ya ha pasado el tiempo para revertir el deposito'});
+        await Deposit.findOneAndDelete({_id: id});
+        await Account.findOneAndUpdate({_id: deposit.accountReq}, { $inc: { balances: -deposit.amount, movements: -1 } }, {new: true});
+        return res.status(200).send({message: 'reverse deposit'});
+    }catch(e){
+        console.error(e);
+        return res.status(500).send({message: 'Error deletting'})
     }
 }
 

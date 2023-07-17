@@ -9,5 +9,6 @@ api.post('/add', depositController.create);
 api.put('/update/:id', depositController.update);
 api.get('/get', depositController.getDeposits);
 api.get('/getById/:id', depositController.getDepositById);
+api.delete('/delete/:id', depositController.delete);
 
 module.exports = api;
