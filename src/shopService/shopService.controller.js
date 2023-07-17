@@ -26,7 +26,7 @@ exports.buyService = async (req, res) => {
         )
         let history = new HistoryService({ service: shop._id, user: account.user });
         await history.save();
-        return res.status(200).send({ message: 'Shp' })
+        return res.status(200).send({ message: 'bought' })
     } catch (e) {
         console.log(e);
         return res.status(500).send({ message: 'Error buying' })
