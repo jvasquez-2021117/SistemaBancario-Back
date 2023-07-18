@@ -122,7 +122,7 @@ exports.update = async (req, res) => {
             { new: true, upsert: true }
         )
         if (!updatedUser) return res.send({ message: 'User not found and not update' });
-        return res.send({ message: 'Updated User', idUser })
+        return res.send({ message: 'Updated User'})
     } catch (e) {
         console.log(e);
         return res.status(500).send({ message: 'Error updating user' })
