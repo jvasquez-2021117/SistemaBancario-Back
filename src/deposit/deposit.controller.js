@@ -56,6 +56,7 @@ exports.delete = async(req, res) => {
         let deposit = await Deposit.findOne({_id: id});
         if(deposit.reverse <= 0) return res.send({message: 'ya ha pasado el tiempo para revertir el deposito'});
         await Deposit.findOneAndDelete({_id: id});
+        await HistoryDeposit.findOneAndDelete({deposit: id});
         await Account.findOneAndUpdate({_id: deposit.accountReq}, { $inc: { balances: -deposit.amount, movements: -1 } }, {new: true});
         return res.status(200).send({message: 'reverse deposit'});
     }catch(e){
